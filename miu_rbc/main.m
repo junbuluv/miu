@@ -24,14 +24,17 @@ options = optimset('Display','iter','MaxFunEvals',1000000,'TolFun',1e-8,'MaxIter
 fun_k = @(k) beta * (1-delta + alpha*k^(alpha-1) * nss^(1-alpha)) -1;
 kss = fsolve(fun_k,0.1,options);
 % steady state c
+
 css = (1-delta + alpha*kss^(alpha-1)*nss^(1-alpha))*kss + (1-alpha)*kss^(alpha)*nss^(1-alpha) - kss;
+
+% Fisher equation 
+iss= (1+pi_ss)/beta - 1;
+
 % steady state m
-mss = 1;
-% steady state i
-iss = css / (mss - css);
+mss=((iss/(1+iss))*(css^(-1)/psi))^(-1/zeta);
+
 % find A
-fun_A = @(a) alpha * kss^(alpha-1)*nss^(1-alpha) - (a*css)/(1-nss);
-A = fsolve(fun_A,0.1,options);
+A = (1-alpha)*kss^(alpha)*nss^(-alpha) * (1-nss) / css;
 
 
 
